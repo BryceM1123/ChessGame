@@ -6,7 +6,7 @@ import javax.imageio.ImageIO;
 
 public class Queen extends Piece{
 	public Queen(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/test.png", "/pieces/test.png");
+		super(color, x, y, "/pieces/White_Queen.png", "/pieces/Black_Queen.png");
 	}
 	
 	@Override
