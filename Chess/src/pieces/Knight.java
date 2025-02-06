@@ -13,7 +13,7 @@ public class Knight extends Piece {
 	
 	public Knight(PieceColor color, int x, int y) throws IOException {
 		
-		super(color, x, y, "/pieces/test.png", "/pieces/Black_Knight.png");
+		super(color, x, y, "/pieces/White_Knight.png", "/pieces/Black_Knight.png");
 		
 	}
 	

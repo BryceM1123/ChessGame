@@ -107,13 +107,13 @@ public class ChessPanel extends JPanel implements ActionListener {
 			initialPlacement(pieces[8]);
 			pieces[9] = new Knight(PieceColor.BLACK, UNIT_SIZE * 1, UNIT_SIZE * 0);
 			initialPlacement(pieces[9]);
-			pieces[10] = new Pawn(PieceColor.BLACK, UNIT_SIZE * 2, UNIT_SIZE * 0);
+			pieces[10] = new Bishop(PieceColor.BLACK, UNIT_SIZE * 2, UNIT_SIZE * 0);
 			initialPlacement(pieces[10]);
 			pieces[11] = new King(PieceColor.BLACK, UNIT_SIZE * 3, UNIT_SIZE * 0);
 			initialPlacement(pieces[11]);
-			pieces[12] = new Pawn(PieceColor.BLACK, UNIT_SIZE * 4, UNIT_SIZE * 0);
+			pieces[12] = new Queen(PieceColor.BLACK, UNIT_SIZE * 4, UNIT_SIZE * 0);
 			initialPlacement(pieces[12]);
-			pieces[13] = new Pawn(PieceColor.BLACK, UNIT_SIZE * 5, UNIT_SIZE * 0);
+			pieces[13] = new Bishop(PieceColor.BLACK, UNIT_SIZE * 5, UNIT_SIZE * 0);
 			initialPlacement(pieces[13]);
 			pieces[14] = new Knight(PieceColor.BLACK, UNIT_SIZE * 6, UNIT_SIZE * 0);
 			initialPlacement(pieces[14]);
@@ -144,7 +144,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 			initialPlacement(pieces[26]);
 			pieces[27] = new King(PieceColor.WHITE, UNIT_SIZE * 3, UNIT_SIZE * 7);
 			initialPlacement(pieces[27]);
-			pieces[28] = new Pawn(PieceColor.WHITE, UNIT_SIZE * 4, UNIT_SIZE * 7);
+			pieces[28] = new Queen(PieceColor.WHITE, UNIT_SIZE * 4, UNIT_SIZE * 7);
 			initialPlacement(pieces[28]);
 			pieces[29] = new Bishop(PieceColor.WHITE, UNIT_SIZE * 5, UNIT_SIZE * 7);
 			initialPlacement(pieces[29]);

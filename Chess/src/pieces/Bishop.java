@@ -10,7 +10,7 @@ import tiles.TileManager;
 public class Bishop extends Piece{
 
 	public Bishop(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/test.png", "/pieces/test.png");
+		super(color, x, y, "/pieces/White_Bishop.png", "/pieces/Black_Bishop.png");
 	}
 
 	@Override
