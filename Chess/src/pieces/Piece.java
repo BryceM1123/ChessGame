@@ -66,14 +66,17 @@ public class Piece {
 		x = -1000;
 	}
 	
+	//checks whether there is another piece in between the current tile and the target tile
 	public boolean checkCollision(MovementDirection direction, int  pieceX, int pieceY, int tileX, int tileY) {
 		Tile[][] tiles = TileManager.getTiles();
-		int goal;
-		int rowNumber = -1;
-		int colNumber = -1;
+		int goal; //the row or column that the piece is moving through (only applicable for North/South and East/West
+		int rowNumber = -10000; //arbitrary number cause it can't be zero
+		int colNumber = -10000; //^^
+		
 		switch (direction)  {
-			case NORTH:
-				goal = tileY + 100;
+			case NORTH:	
+				goal = tileY + 100;//i don't remember waht this does, comment these later
+				//finds the correct Row
 				rowNumber = 1;
 				for (int i = 0; i < tiles[0].length; i++) {
 					if (pieceX == tiles[0][i].getLeftX()) {
@@ -82,6 +85,8 @@ public class Piece {
 						
 					}
 				}
+				
+				// checks any tile in that row between the target tile and the piece
 				for (int i = 0; i < tiles.length; i++) {
 					if (tiles[i][rowNumber].getTopY() >= goal && tiles[i][rowNumber].getTopY() < pieceY) {
 						if (tiles[i][rowNumber].getPiece() != null) {
@@ -93,8 +98,9 @@ public class Piece {
 				}
 				break;
 				
-			case SOUTH:
+			case SOUTH:	
 				goal = tileY - 100;
+				//finds the correct Row
 				for (int i = 0; i < tiles[0].length; i++) {
 					if (pieceX == tiles[0][i].getLeftX()) {
 						rowNumber = i;
@@ -102,11 +108,11 @@ public class Piece {
 						
 					}
 				}
+				
+				// checks any tile in that row between the target tile and the piece
 				for (int i = 0; i < tiles.length; i++) {
 					if (tiles[i][rowNumber].getTopY() <= goal && tiles[i][rowNumber].getTopY() > pieceY) {
 						if (tiles[i][rowNumber].getPiece() != null) {
-							System.out.println("piece y: " + tiles[i][rowNumber].getPiece().getY());
-							System.out.println("piece x: " + tiles[i][rowNumber].getPiece().getX());
 							return false;
 						}
 					}
@@ -115,7 +121,7 @@ public class Piece {
 				
 			case EAST:
 				goal = tileX + 100;
-				
+				//finds the correct column
 				for (int i = 0; i < tiles.length; i++) {
 					if (pieceY == tiles[i][0].getTopY()) {
 						colNumber = i;
@@ -123,11 +129,10 @@ public class Piece {
 					}
 				}
 				
+				//checks any tile in that column between the target tile and the piece
 				for (int i = 0; i < tiles[colNumber].length; i++) {
 					if (tiles[colNumber][i].getLeftX() >= goal && tiles[colNumber][i].getLeftX() < pieceX) {
 						if (tiles[colNumber][i].getPiece() != null) {
-							System.out.println("piece y: " + tiles[colNumber][i].getPiece().getY());
-							System.out.println("piece x: " + tiles[colNumber][i].getPiece().getX());
 							return false;
 						}
 					}
@@ -136,7 +141,7 @@ public class Piece {
 				
 			case WEST:
 				goal = tileX - 100;
-				
+				//finds the correct column
 				for (int i = 0; i < tiles.length; i++) {
 					if (pieceY == tiles[i][0].getTopY()) {
 						colNumber = i;
@@ -144,23 +149,75 @@ public class Piece {
 					}
 				}
 				
+				//checks any tile in that column between the target tile and the piece
 				for (int i = 0; i < tiles[colNumber].length; i++) {
 					if (tiles[colNumber][i].getLeftX() <= goal && tiles[colNumber][i].getLeftX() > pieceX) {
 						if (tiles[colNumber][i].getPiece() != null) {
-							System.out.println("piece y: " + tiles[colNumber][i].getPiece().getY());
-							System.out.println("piece x: " + tiles[colNumber][i].getPiece().getX());
 							return false;
 						}
 					}
 				}
 				break;
+				
 			case NORTHEAST:
+				//NORTHEAST
+				if (y - tileY == x - tileX) {
+					int numberOfTiles = (y - tileY);
+					
+					for (int i = 0 ; i < tiles.length; i++) {
+						for (int j = 0; j < tiles[i].length; j++) {
+							if ((y - tiles[i][j].getTopY() == x - tiles[i][j].getLeftX()) && y - tiles[i][j].getTopY() > 0 && y - tiles[i][j].getTopY() < numberOfTiles) {
+								if (tiles[i][j].getPiece() != null) {	
+									return false;
+								}
+							} 
+						}
+					}
+				}
 				break;
 			case NORTHWEST:
+				if (y - tileY == -(x - tileX)) {
+					int numberOfTiles = (y - tileY);
+					for (int i = 0 ; i < tiles.length; i++) {
+						for (int j = 0; j < tiles[i].length; j++) {
+							if ((y - tiles[i][j].getTopY() == -(x - tiles[i][j].getLeftX())) && y - tiles[i][j].getTopY() > 0 && y - tiles[i][j].getTopY() < numberOfTiles) {
+								if (tiles[i][j].getPiece() != null) {	
+									return false;
+								}
+							} 
+						}
+					}
+				}
 				break;
 			case SOUTHEAST:
+
+				if (y - tileY == -(x - tileX)) {
+
+					int numberOfTiles = (y - tileY);
+					for (int i = 0 ; i < tiles.length; i++) {
+						for (int j = 0; j < tiles[i].length; j++) {
+							if ((y - tiles[i][j].getTopY() == -(x - tiles[i][j].getLeftX())) && y - tiles[i][j].getTopY() < 0 && y - tiles[i][j].getTopY() > numberOfTiles) {
+								if (tiles[i][j].getPiece() != null) {	
+									return false;
+								}
+							} 
+						}
+					}
+				}
 				break;
 			case SOUTHWEST:
+				if (y - tileY == x - tileX) {
+					int numberOfTiles = (y - tileY);
+					for (int i = 0 ; i < tiles.length; i++) {
+						for (int j = 0; j < tiles[i].length; j++) {
+							if ((y - tiles[i][j].getTopY() == x - tiles[i][j].getLeftX()) && y - tiles[i][j].getTopY() < 0 && y - tiles[i][j].getTopY() > numberOfTiles) {
+								if (tiles[i][j].getPiece() != null) {	
+									return false;
+								}
+							} 
+						}
+					}
+				}
 				break;
 							
 			

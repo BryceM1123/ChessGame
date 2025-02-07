@@ -22,25 +22,27 @@ public class Rook extends Piece {
 		boolean canMove = false;
 		MovementDirection direction;
 		boolean notFriendlyFire = true;
+		
+		//preemptively checks that the target tile does not contain a piece of the same color
 		if (targetTile.getPiece() != null) {
 			if (targetTile.getPiece().getColor() == color) {
 				notFriendlyFire = false;
 			} 
 		}
-
+		
+		
 		if (notFriendlyFire) {
-			//check if the movement is valid
-			//if valid, assign a movement direction for path checking
-			//NORTH
+			//Check what direction the piece is going
+			//Check collision in the direction the piece is going
+			//if there is a valid direction and no collision, set canMove to true
 			
+			//NORTH
 			if ((y - targetTile.getTopY() > 0 &&  y -  targetTile.getTopY() <= 800)
 					&& (x - targetTile.getLeftX() < 100 && x - targetTile.getLeftX() > -100)) {
 				direction = MovementDirection.NORTH;
 				if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
 					canMove = true; 
-				} else {
-					return false;
-				}
+				} 
 			}
 			
 			//SOUTH
@@ -49,8 +51,6 @@ public class Rook extends Piece {
 				direction = MovementDirection.SOUTH;
 				if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
 					canMove = true; 
-				} else {
-					return false;
 				}
 			}	
 			
@@ -60,9 +60,7 @@ public class Rook extends Piece {
 				direction = MovementDirection.EAST;
 				if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
 					canMove = true; 
-				} else {
-					return false;
-				}
+				} 
 			}
 			
 			//WEST 
@@ -113,10 +111,5 @@ public class Rook extends Piece {
 			}
 		}
 		return false; //returns false if a move doesn't occur.
-	}
-	
-	public boolean checkPathIsClear(MovementDirection direction) {
-		
-		return true;
 	}
 }
