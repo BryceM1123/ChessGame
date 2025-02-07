@@ -2,10 +2,6 @@ This is a simple chess game coded from scratch.
 
 Missing core features:
   
-  finished movesets for bishops, kings, and queens.
-  
-  collision for diagonal movements
-  
   game over (temporarily tied to king death, eventually tied to check)
   
     display which color won
