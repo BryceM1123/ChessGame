@@ -15,21 +15,60 @@ public class Bishop extends Piece{
 
 	@Override
 	public boolean move(int targetX, int targetY) {
-		System.out.println("moving");
 		Tile oldTile = currentTile;
 		Tile targetTile = TileManager.findTile(targetX, targetY);
-			//makes sure that the pawn can only move forward and only by 1-2 spaces
-		System.out.println("x: " + x + " y: " + y);
-		System.out.println("tilex: " + targetTile.getLeftX() + " tiley: " + targetTile.getTopY());
-		if ((y - targetTile.getTopY() <= 700 || y - targetTile.getTopY() >= -700) && x - targetTile.getLeftX() == y - targetTile.getTopY()) {
-			System.out.println("yippee");
+		boolean canMove = false;
+		MovementDirection direction;
+
+		//NORTHEAST
+		if ((y - targetTile.getTopY() <= 700 && y - targetTile.getTopY() > 0) && x - targetTile.getLeftX() == y - targetTile.getTopY()) {
+			System.out.println("1");
+			direction = MovementDirection.NORTHEAST;
+			if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
+				canMove = true; 
+			} else {
+				return false;
+			}
+		}
+		//NORTHWEST
+		else if ((y - targetTile.getTopY() <= 700 && y - targetTile.getTopY() > 0) && -(x - targetTile.getLeftX()) == y - targetTile.getTopY()) {
+			System.out.println("3");
+			direction = MovementDirection.NORTHWEST;
+			if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
+				canMove = true; 
+			} else {
+				return false;
+			}
+		}
+		
+		//SOUTHEAST
+		else if((y - targetTile.getTopY() < 0 && y - targetTile.getTopY() >= -700) && -(x - targetTile.getLeftX()) == y - targetTile.getTopY()) {
+			System.out.println("4");
+			direction = MovementDirection.SOUTHEAST;
+			if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
+				canMove = true; 
+			} else {
+				return false;
+			}
+		}
+		//SOUTHWEST
+		else if ((y - targetTile.getTopY() < 0 && y - targetTile.getTopY() >= -700) && x - targetTile.getLeftX() == y - targetTile.getTopY()) {
+			System.out.println("2");
+			direction = MovementDirection.SOUTHWEST;
+			if (checkCollision(direction, x, y, targetTile.getLeftX(), targetTile.getTopY())) {
+				canMove = true; 
+			} else {
+				return false;
+			}
+		}
+		
+		if (canMove) {
 			if (targetTile.getPiece() != null) {
-				System.out.println("piece is there");
 				if (targetTile.getPiece().getColor() != color) {
-					
-				} else {
-					return false;
-				}
+					if (tryAttack(targetTile)) {
+						return true;
+					}
+				} 
 				
 				
 			} else {
@@ -45,8 +84,25 @@ public class Bishop extends Piece{
 			
 
 		}
-		System.out.println("aaaa");
 			 
 		return false;
+	}
+	public boolean tryAttack(Tile targetTile) {
+		Piece targetPiece = targetTile.getPiece();
+		if (targetPiece != null) {
+			if (targetPiece.getColor() != color) {
+				Tile oldTile = currentTile;
+				targetTile.occupyTileByForce(this);
+				currentTile = targetTile;
+				oldTile.unoccupyTile();
+				targetPiece.kill();
+				this.x = targetTile.getLeftX();
+				this.y = targetTile.getTopY();
+				chessPanel.callDraw();
+		
+				return true;
+			}
+		}
+		return false; //returns false if a move doesn't occur.
 	}
 }

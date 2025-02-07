@@ -15,7 +15,7 @@ import java.util.Random;
 public class ChessPanel extends JPanel implements ActionListener {
 	public static final ChessPanel chessPanel = new ChessPanel(); //ensures that the ChessPanel class is a singleton
 	
-	//define the resolution for chess. You shouldnt need to resize this.
+	//define the resolution for chess. You shouldn't need to resize this.
 	static final int UNIT_SIZE = 100; //100 is default. if changed, you will need to edit ChessFrame
 	static final int ROW = 8;
 	static final int COL = 8;
