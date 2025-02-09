@@ -9,12 +9,13 @@ import tiles.Tile;
 import tiles.TileManager;
 
 public class Pawn extends Piece{
-	
+
 	int firstTurnMultiplier = 2; //number of spaces pawn can move on its first turn
 	int maxDistance = 100; //distance pawn can move per turn normally (100 = 1 tile)
 	
 	public Pawn(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/White_Pawn.png", "/pieces/Black_Pawn.png");
+		super(color, x, y, "/pieces/White_Pawn.png", "/pieces/Black_Pawn.png", "/pieces/test.png");
+	
 	}
 	
 	@Override

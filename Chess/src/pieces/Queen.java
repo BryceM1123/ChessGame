@@ -7,9 +7,10 @@ import javax.imageio.ImageIO;
 import tiles.Tile;
 import tiles.TileManager;
 
-public class Queen extends Piece{
+public class Queen extends Piece{ 
+	
 	public Queen(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/White_Queen.png", "/pieces/Black_Queen.png");
+		super(color, x, y, "/pieces/White_Queen.png", "/pieces/Black_Queen.png", "/pieces/test.png");
 	}
 	
 	@Override

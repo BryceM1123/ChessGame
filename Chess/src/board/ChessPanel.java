@@ -219,6 +219,18 @@ public class ChessPanel extends JPanel implements ActionListener {
 		piece.assignTile(TileManager.findTile(piece.getX(), piece.getY()));
 	}
 	
+	private void switchToAmongUsSkin() throws IOException {
+		for (Piece piece : pieces) {
+			piece.switchSkin("AmongUs");
+		}
+	}
+	private void switchToDefaultSkin() throws IOException {
+		for (Piece piece : pieces) {
+
+			piece.switchSkin("Default");
+		}
+	}
+	
 	///////////////////
 	//ActionListeners//
 	///////////////////
@@ -240,6 +252,26 @@ public class ChessPanel extends JPanel implements ActionListener {
 	public class MyKeyAdapter extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_J: 
+				try {
+					switchToDefaultSkin();
+					callDraw();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			case KeyEvent.VK_K:
+				try {
+					switchToAmongUsSkin();
+					callDraw();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			}
 		}
 	}
 

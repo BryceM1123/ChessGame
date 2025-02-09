@@ -8,10 +8,9 @@ import tiles.Tile;
 import tiles.TileManager;
 
 public class Rook extends Piece {
-	
-	
+
 	public Rook(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/White_Rook.png", "/pieces/Black_Rook.png");
+		super(color, x, y, "/pieces/White_Rook.png", "/pieces/Black_Rook.png", "/pieces/test.png");
 	}
 	
 	
