@@ -23,8 +23,6 @@ Missing core features:
   pawn upgrade when it reaches the end
 
 Potential features:
-
-  Alternative sprites
   
   moving/killing animations
 
