@@ -16,19 +16,39 @@ public class Piece {
 	protected Tile currentTile;
 	public BufferedImage image;
 	public boolean alive = true;
-	
+	String whiteImage;
+	String blackImage;
+	String amongUsImage;
 	ChessPanel chessPanel = ChessPanel.getChessPanel();
 	
 	//add images to this parent constructor
-	Piece(PieceColor color, int x, int y, String whiteImage, String blackImage) throws IOException {
+	Piece(PieceColor color, int x, int y, String whiteImage, String blackImage, String amongUsImage) throws IOException {
 		this.color = color;
 		this.x = x;
 		this.y = y;
+		this.whiteImage = whiteImage;
+		this.blackImage = blackImage;
+		this.amongUsImage = amongUsImage;
 		
 		if (color == PieceColor.WHITE) {
 			this.image = ImageIO.read(getClass().getResourceAsStream(whiteImage));
 		} else {
 			this.image = ImageIO.read(getClass().getResourceAsStream(blackImage));;
+		}
+	}
+	
+	public void switchSkin(String skinSet) throws IOException {
+		switch (skinSet) {
+		case "Default":
+			if (color == PieceColor.WHITE) {
+				this.image = ImageIO.read(getClass().getResourceAsStream(whiteImage));
+			} else {
+				this.image = ImageIO.read(getClass().getResourceAsStream(blackImage));;
+			}
+			break;
+		case "AmongUs":
+			this.image = ImageIO.read(getClass().getResourceAsStream(amongUsImage));
+			break;
 		}
 	}
 	

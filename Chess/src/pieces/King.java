@@ -8,8 +8,9 @@ import tiles.Tile;
 import tiles.TileManager;
 
 public class King extends Piece {
+	
 	public King(PieceColor color, int x, int y) throws IOException {
-		super(color, x, y, "/pieces/White_King.png", "/pieces/Black_King.png");
+		super(color, x, y, "/pieces/White_King.png", "/pieces/Black_King.png", "/pieces/test.png");
 	}
 	@Override
 	public boolean move(int targetX, int targetY) {
