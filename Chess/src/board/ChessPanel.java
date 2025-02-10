@@ -2,8 +2,10 @@ package board;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import pieces.*;
@@ -23,12 +25,28 @@ public class ChessPanel extends JPanel implements ActionListener {
 	static final int SCREEN_HEIGHT = COL * UNIT_SIZE;
 	PieceColor currentTurnColor = PieceColor.WHITE;
 	Graphics2D g2;
+	private boolean gameOver = false;
 	
 	private boolean initialized; // checks whether pieces have been initialized.
-	
+	BufferedImage darkeningEffect;
 	Piece selectedPiece; 
 	
 	Piece[] pieces = new Piece[32]; //creates the array. Should be 32 when all pieces are implemented.
+	
+	public void gameOver() {
+		gameOver = true;
+		ChessPanel chessPanel = ChessPanel.getChessPanel();
+		repaint();	
+	}
+	
+	public void newGame() {
+		TileManager.resetTiles();
+		chessPanel.reinitializePieces();
+		currentTurnColor = PieceColor.WHITE;
+		selectedPiece = null;
+		gameOver = false;
+		repaint();
+	}
 	
 	public void callDraw() {
 		repaint();
@@ -40,7 +58,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	
 	public void draw(Graphics2D g2) {
-		for (Piece i : pieces) {
+		for (Piece piece : pieces) {
 			g2.setFont(new Font("TimesRoman", Font.PLAIN, 30)); 
 			g2.setColor(new Color(255,0,0));
 			
@@ -49,8 +67,8 @@ public class ChessPanel extends JPanel implements ActionListener {
 			} else if (currentTurnColor == PieceColor.BLACK) {
 				g2.drawString("BLACK", 200, 200);
 			}
-			if (i.getAlive()) {
-				g2.drawImage(i.getImage(), i.getX(), i.getY(), UNIT_SIZE, UNIT_SIZE, null);
+			if (piece.getAlive()) {
+				g2.drawImage(piece.getImage(), piece.getX(), piece.getY(), UNIT_SIZE, UNIT_SIZE, null);
 			}
 		}
 	}
@@ -60,12 +78,26 @@ public class ChessPanel extends JPanel implements ActionListener {
 	//If draw breaks, move g.dispose().
 	public void paintComponent(Graphics g) {
 		if (!initialized) {
-			initialize();
+			reinitializePieces();
 		}
 		super.paintComponent(g);
 		drawBoard(g);
 		g2 = (Graphics2D)g;
 		draw(g2);
+		if (gameOver) {
+			if (darkeningEffect == null) {
+				try {
+					darkeningEffect = ImageIO.read(getClass().getResourceAsStream("/other/Darkening_Effect.png"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			g2.drawImage(darkeningEffect, 0, 0, UNIT_SIZE * COL, UNIT_SIZE * ROW, null);
+			g2.setFont(new Font("TimesRoman", Font.PLAIN, 100)); 
+			g2.setColor(new Color(255,0,0));
+			g2.drawString("Game Over", 200, 200);
+			
+		}
 
 	}
 	
@@ -85,7 +117,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	//manually places all of the pieces
 	//I can't remember why its in a try catch block, investigate later
-	private void initialize() {
+	private void reinitializePieces() {
 		try {
 			pieces[0] = new Pawn(PieceColor.BLACK, UNIT_SIZE * 0, UNIT_SIZE * 1);
 			initialPlacement(pieces[0]);
@@ -182,7 +214,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	//UNFINISHED
 	//used by the mouse to check if a piece is on a clicked tile and then select that piece.
-	public void selectPiece(int x, int y) {
+	public void selectPiece(int x, int y) throws IOException {
 		Tile currentTile = TileManager.findTile(x, y);
 		System.out.println(currentTile.getPiece());
 		//System.out.println("color: " + currentTile.getPiece().getColor());
@@ -196,14 +228,29 @@ public class ChessPanel extends JPanel implements ActionListener {
 				} else {
 					currentTurnColor = PieceColor.WHITE;
 				}
+				selectedPiece.unselectPiece();
+				selectedPiece = null;
+			} else if (didMove == false) {
+				if (currentTile.getPiece() != null && currentTile.getPiece().getColor() == currentTurnColor) {
+					selectedPiece.unselectPiece();
+					
+					selectedPiece = currentTile.getPiece();
+					selectedPiece.selectPiece();
+					System.out.println("Current piece: " + selectedPiece);
+				} else { 
+					//Unselects current piece if an invalid move is picked.
+					selectedPiece.unselectPiece();
+					selectedPiece = null;
+				}
 			}
 			
-			selectedPiece = null;
+			
 			
 		}
 		
 		else if (selectedPiece == null && currentTile.getPiece() != null && currentTile.getPiece().getColor() == currentTurnColor) {
 			selectedPiece = currentTile.getPiece();
+			selectedPiece.selectPiece();
 			System.out.println("Current piece: " + selectedPiece);
 		}
 	}
@@ -241,8 +288,13 @@ public class ChessPanel extends JPanel implements ActionListener {
 		 public void mousePressed(MouseEvent e){
 	            int mouseX = e.getX();
 	            int mouseY = e.getY();
-	        
-	            selectPiece(mouseX, mouseY);//checks if you clicked on a piece
+	            if (!gameOver) {
+	            	try {
+						selectPiece(mouseX, mouseY); //checks if you clicked on a piece
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+	            }
 	            System.out.println("X: " + mouseX + "\n" + "Y: " +mouseY); //debug: prints out click location
 		 }
 	}
@@ -253,6 +305,11 @@ public class ChessPanel extends JPanel implements ActionListener {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
+			case KeyEvent.VK_SPACE:
+				if (gameOver) {
+					newGame();
+				}
+				break;
 			case KeyEvent.VK_J: 
 				try {
 					switchToDefaultSkin();

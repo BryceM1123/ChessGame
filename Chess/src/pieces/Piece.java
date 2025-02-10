@@ -37,6 +37,20 @@ public class Piece {
 		}
 	}
 	
+	public void selectPiece() throws IOException {
+		this.image = ImageIO.read(getClass().getResourceAsStream(amongUsImage));
+		chessPanel.callDraw();
+	}
+	
+	public void unselectPiece() throws IOException {
+		if (color == PieceColor.WHITE) {
+			this.image = ImageIO.read(getClass().getResourceAsStream(whiteImage));
+		} else {
+			this.image = ImageIO.read(getClass().getResourceAsStream(blackImage));;
+		}
+		chessPanel.callDraw();
+	}
+	
 	public void switchSkin(String skinSet) throws IOException {
 		switch (skinSet) {
 		case "Default":
@@ -84,6 +98,11 @@ public class Piece {
 		alive = false;
 		y = -1000;
 		x = -1000;
+		
+		
+		if (this instanceof King) {
+			chessPanel.gameOver();
+		}
 	}
 	
 	//checks whether there is another piece in between the current tile and the target tile
