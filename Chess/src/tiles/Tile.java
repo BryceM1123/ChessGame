@@ -9,6 +9,8 @@ public class Tile {
 	final private int botY;
 	final private String name;
 	private Piece occupyingPiece;
+	private boolean pathable = false; //true if the selected piece can move there
+	private boolean targetable = false;
 	
 	public Tile(int leftX, int rightX, int topY, int botY, String name) {
 		this.leftX = leftX;
@@ -43,6 +45,37 @@ public class Tile {
 		return name;
 	}
 	
+	public void setPathable() {
+		pathable = true;
+	}
+	
+	public void setNotPathable() {
+		pathable = false;
+	}
+	
+	public boolean isPathable() {
+		return pathable;
+	}
+	
+	public void setTargetable() {
+		targetable = true;
+	}
+	
+	public void setNotTargetable() {
+		targetable = false;
+	}
+	
+	public boolean isTargetable() {
+		return targetable;
+	}
+	
+	public boolean isOccupied() {
+		if (occupyingPiece == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	//attempts to fill the tile if it is empty.
 	//will need to be updated to allow pieces to attack.
 	public boolean occupyTile(Piece incomingPiece) {

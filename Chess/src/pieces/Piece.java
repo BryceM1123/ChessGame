@@ -2,6 +2,7 @@ package pieces;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
 
@@ -16,6 +17,9 @@ public class Piece {
 	protected Tile currentTile;
 	public BufferedImage image;
 	public boolean alive = true;
+	Stack<int[]> pathingStorage = new Stack<int[]>();
+	Stack<int[]> targetingStorage = new Stack<int[]>();
+	Tile[][] tiles = TileManager.getTiles();
 	String whiteImage;
 	String blackImage;
 	String amongUsImage;
@@ -37,8 +41,23 @@ public class Piece {
 		}
 	}
 	
+	public void showPathing() {
+		
+	}
+	
+	public void hidePathing() {
+		while (!pathingStorage.empty()) {
+			int[] coordinates = pathingStorage.pop();
+			tiles[coordinates[0]][coordinates[1]].setNotPathable();
+		}
+		while (!targetingStorage.empty()) {
+			int[] coordinates = targetingStorage.pop();
+			tiles[coordinates[0]][coordinates[1]].setNotTargetable();
+		}
+	}
 	public void selectPiece() throws IOException {
 		this.image = ImageIO.read(getClass().getResourceAsStream(amongUsImage));
+		showPathing();
 		chessPanel.callDraw();
 	}
 	
