@@ -16,6 +16,34 @@ public class Knight extends Piece {
 	}
 	
 	@Override
+	public void showPathing() {
+		for (int i = 0; i < tiles.length; i++)	{
+			for (int j = 0; j < tiles[i].length; j++) {
+				if ((y - tiles[i][j].getTopY() == -200 && x - tiles[i][j].getLeftX() == 100) //down 2 left 1
+						|| (y - tiles[i][j].getTopY() == -200 && x - tiles[i][j].getLeftX() == -100) //down 2 right 1
+						|| (y - tiles[i][j].getTopY() == 200 && x - tiles[i][j].getLeftX() == 100) //up 2 left 1
+						|| (y - tiles[i][j].getTopY() == 200 && x - tiles[i][j].getLeftX() == -100) //up 2 right 1 
+						|| (y - tiles[i][j].getTopY() == -100 && x - tiles[i][j].getLeftX() == 200) //left 2 down 1
+						|| (y - tiles[i][j].getTopY() == 100 && x - tiles[i][j].getLeftX() == 200) //left 2 up 1
+						|| (y - tiles[i][j].getTopY() == -100 && x - tiles[i][j].getLeftX() == -200) //right 2 down 1
+						|| (y - tiles[i][j].getTopY() == 100 && x - tiles[i][j].getLeftX() == -200)) {
+						
+					if (tiles[i][j].isOccupied()) {
+						if (tiles[i][j].getPiece().getColor() != color) {
+							tiles[i][j].setTargetable();
+							targetingStorage.push(new int[]{i, j});
+						}
+					} else {
+						tiles[i][j].setPathable();
+						pathingStorage.push(new int[]{i, j});
+					}
+					
+				}
+			}
+		}
+	}
+	
+	@Override
 	public boolean move(int targetX, int targetY) {
 		Tile oldTile = currentTile;
 		Tile targetTile = TileManager.findTile(targetX, targetY);

@@ -29,8 +29,10 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	private boolean initialized; // checks whether pieces have been initialized.
 	BufferedImage darkeningEffect;
+	BufferedImage pathableTile;
+	BufferedImage targetableTile;
 	Piece selectedPiece; 
-	
+	Tile[][] tiles = TileManager.getTiles();
 	Piece[] pieces = new Piece[32]; //creates the array. Should be 32 when all pieces are implemented.
 	
 	public void gameOver() {
@@ -58,9 +60,37 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	
 	public void draw(Graphics2D g2) {
+		for (Tile[] tilesArray: tiles) {
+			for (Tile tile : tilesArray) {
+				if (tile.isPathable()) {
+					if (pathableTile == null) {
+						try {
+							pathableTile = ImageIO.read(getClass().getResourceAsStream("/other/Pathable_Tile.png"));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					g2.drawImage(pathableTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
+				}
+				if (tile.isTargetable()) {
+					if (targetableTile == null) {
+						try {
+							targetableTile = ImageIO.read(getClass().getResourceAsStream("/other/Targetable_Tile.png"));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					g2.drawImage(targetableTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
+				}
+			}
+			
+		}
 		for (Piece piece : pieces) {
 			g2.setFont(new Font("TimesRoman", Font.PLAIN, 30)); 
 			g2.setColor(new Color(255,0,0));
+			
 			
 			if (currentTurnColor == PieceColor.WHITE) {
 				g2.drawString("WHITE", 200, 200);
@@ -199,7 +229,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 			colorChange = !colorChange;
 			for (int j = 0; j < ROW; j++) {
 				if (colorChange == false) {
-					g.setColor(Color.black);
+					g.setColor(Color.gray);
 					g.fillRect(i*UNIT_SIZE, j*UNIT_SIZE, UNIT_SIZE, UNIT_SIZE);
 					colorChange = true;
 				}
@@ -228,10 +258,12 @@ public class ChessPanel extends JPanel implements ActionListener {
 				} else {
 					currentTurnColor = PieceColor.WHITE;
 				}
+				selectedPiece.hidePathing();
 				selectedPiece.unselectPiece();
 				selectedPiece = null;
 			} else if (didMove == false) {
 				if (currentTile.getPiece() != null && currentTile.getPiece().getColor() == currentTurnColor) {
+					selectedPiece.hidePathing();
 					selectedPiece.unselectPiece();
 					
 					selectedPiece = currentTile.getPiece();
@@ -239,6 +271,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 					System.out.println("Current piece: " + selectedPiece);
 				} else { 
 					//Unselects current piece if an invalid move is picked.
+					selectedPiece.hidePathing();
 					selectedPiece.unselectPiece();
 					selectedPiece = null;
 				}
