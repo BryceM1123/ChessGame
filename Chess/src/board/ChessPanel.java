@@ -132,9 +132,6 @@ public class ChessPanel extends JPanel implements ActionListener {
 				else if (tile.isInCheck()) {
 					g2.drawImage(checkTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
 				}
-				else if (tile.isCheckable()) {
-					g2.drawImage(selectedTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
-				}
 			
 				g2.drawImage(tileOutline, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
 			}
