@@ -15,23 +15,24 @@ public class Queen extends Piece{
 	
 	@Override
 	public void showPathing() {
-		System.out.println("pathing");
-		int currentMin = 0;
-		int currentMax = 800;
-		
-	
-		
-		for (int i = 0; i < tiles.length; i++)	{
-			for (int j = 0; j < tiles[i].length; j++) {
+		for (int i = 0; i < tiles.length; ++i)	{
+			for (int j = 0; j < tiles[i].length; ++j) {
 				if ((y - tiles[i][j].getTopY() > 0 &&  y -  tiles[i][j].getTopY() <= 800)
 						&& (x - tiles[i][j].getLeftX() < 100 && x - tiles[i][j].getLeftX() > -100)) {
 					if (checkCollision(MovementDirection.NORTH, x, y, tiles[i][j].getLeftX() ,tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -43,10 +44,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.SOUTH, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -57,10 +65,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.EAST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -72,10 +87,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.WEST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -85,10 +107,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.NORTHEAST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -98,10 +127,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.NORTHWEST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -111,10 +147,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.SOUTHEAST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -124,10 +167,17 @@ public class Queen extends Piece{
 					if (checkCollision(MovementDirection.SOUTHWEST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} else {
 								tiles[i][j].setTargetable();
 								targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}

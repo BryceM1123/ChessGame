@@ -30,7 +30,7 @@ public class Pawn extends Piece{
 		int currentMax = 800;
 		
 	
-		for (int i = 0; i < tiles[0].length; i++)	{
+		for (int i = 0; i < tiles[0].length; ++i)	{
 			if (color == PieceColor.WHITE) { 
 				if (tiles[i][targetColumn].getTopY() < y && currentMin < y && !tiles[i][targetColumn].isOccupied() && (y - tiles[i][targetColumn].getTopY()) <= maxDistance * firstTurnMultiplier) {
 					if (checkCollision(MovementDirection.NORTH, x, y, tiles[i][targetColumn].getLeftX(), tiles[i][targetColumn].getTopY() )) {
@@ -58,10 +58,17 @@ public class Pawn extends Piece{
 					
 					if (tiles[i][j].isOccupied()) {
 						if (tiles[i][j].getPiece().getColor() != color) {
-							tiles[i][j].setTargetable();
-							targetingStorage.push(new int[]{i, j});
+							if (tiles[i][j].isResidentKing()) {
+								tiles[i][j].setInCheck();
+							} else {
+								tiles[i][j].setTargetable();
+								targetingStorage.push(new int[]{i, j});
+							}
 						}
-					} 	
+					} 
+					if (tiles[i][j].isCheckable()) {
+						tiles[i][j].setChecked();
+					}
 				}
 			}
 		} 	
@@ -113,7 +120,7 @@ public class Pawn extends Piece{
 	//attempts to attack a tile that has a resident piece
 	public boolean tryAttack(Tile targetTile) {
 		Piece targetPiece;
-		if (targetTile.getPiece() != null) {
+		if (targetTile.getPiece() != null && targetTile.getPiece().getColor() != color) {
 			targetPiece = targetTile.getPiece(); //the piece being attacked
 			//checks that the target tile is one space in front and to the left or right of the piece (taking piece color into account)
 			//also ensures that the pawn doesn't attack it's own team

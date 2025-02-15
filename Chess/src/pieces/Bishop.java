@@ -15,18 +15,27 @@ public class Bishop extends Piece{
 	
 	@Override
 	public void showPathing() {
-		for (int i = 0; i < tiles.length; i++)	{
-			for (int j = 0; j < tiles[i].length; j++) {
+		for (int i = 0; i < tiles.length; ++i)	{
+			for (int j = 0; j < tiles[i].length; ++j) {
 				if ((y - tiles[i][j].getTopY() <= 700 && y - tiles[i][j].getTopY() > 0) && x - tiles[i][j].getLeftX() == y - tiles[i][j].getTopY()) {
 					if (checkCollision(MovementDirection.NORTHEAST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
-								tiles[i][j].setTargetable();
-								targetingStorage.push(new int[]{i, j});
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} 
+								else {	
+									tiles[i][j].setTargetable();
+									targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
+							
 						}
 					}
 				}
@@ -34,10 +43,18 @@ public class Bishop extends Piece{
 					if (checkCollision(MovementDirection.NORTHWEST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
-								tiles[i][j].setTargetable();
-								targetingStorage.push(new int[]{i, j});
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} 
+								else {
+									tiles[i][j].setTargetable();
+									targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -47,10 +64,19 @@ public class Bishop extends Piece{
 					if (checkCollision(MovementDirection.SOUTHEAST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
-								tiles[i][j].setTargetable();
-								targetingStorage.push(new int[]{i, j});
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} 
+								else {
+								
+									tiles[i][j].setTargetable();
+									targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}
@@ -60,10 +86,19 @@ public class Bishop extends Piece{
 					if (checkCollision(MovementDirection.SOUTHWEST, x, y, tiles[i][j].getLeftX(), tiles[i][j].getTopY())) {
 						if (tiles[i][j].isOccupied()) {
 							if (tiles[i][j].getPiece().getColor() != color) {
-								tiles[i][j].setTargetable();
-								targetingStorage.push(new int[]{i, j});
+								if (tiles[i][j].isResidentKing()) {
+									tiles[i][j].setInCheck();
+								} 
+								else {
+									
+									tiles[i][j].setTargetable();
+									targetingStorage.push(new int[]{i, j});
+								}
 							}
 						} else {
+							if (tiles[i][j].isCheckable()) {
+								tiles[i][j].setChecked();
+							}
 							tiles[i][j].setPathable();
 							pathingStorage.push(new int[]{i, j});
 						}

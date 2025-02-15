@@ -11,6 +11,10 @@ public class Tile {
 	private Piece occupyingPiece;
 	private boolean pathable = false; //true if the selected piece can move there
 	private boolean targetable = false;
+	private boolean checkable = false;
+	private boolean checked = false;
+	private boolean residentKing = false;
+	private boolean inCheck = false;
 	
 	public Tile(int leftX, int rightX, int topY, int botY, String name) {
 		this.leftX = leftX;
@@ -43,6 +47,53 @@ public class Tile {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setInCheck() {
+		inCheck = true;
+	}
+	
+	public void setNotInCheck() {
+		inCheck = false;
+	}
+	
+	public boolean isInCheck() {
+		return inCheck;
+	}
+	
+	public void setResidentKing() {
+		residentKing = true;
+	}
+	
+	public void setNotResidentKing() {
+		residentKing = false;
+	}
+	
+	public boolean isResidentKing() {
+		return residentKing;
+	}
+	
+	public void setChecked() {
+		checked = true;
+	}
+	public void setNotChecked() {
+		checked = false;
+	}
+	
+	public boolean isChecked() {
+		return checked;
+	}
+	
+	public void setCheckable() {
+		checkable = true;
+	}
+	
+	public void setNotCheckable() {
+		checkable = false;
+	}
+	
+	public boolean isCheckable() {
+		return checkable;
 	}
 	
 	public void setPathable() {

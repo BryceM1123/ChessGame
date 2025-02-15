@@ -26,18 +26,28 @@ public class ChessPanel extends JPanel implements ActionListener {
 	PieceColor currentTurnColor = PieceColor.WHITE;
 	Graphics2D g2;
 	private boolean gameOver = false;
-	
 	private boolean initialized; // checks whether pieces have been initialized.
+	
+	//Kings
+	private Piece whiteKing;
+	private Piece blackKing;
+	
 	BufferedImage darkeningEffect;
 	BufferedImage pathableTile;
 	BufferedImage targetableTile;
+	BufferedImage tileOutline;
+	BufferedImage selectedTile;
+	BufferedImage checkTile;
+	
+	PieceColor winningTeam = null;
+	
 	Piece selectedPiece; 
 	Tile[][] tiles = TileManager.getTiles();
 	Piece[] pieces = new Piece[32]; //creates the array. Should be 32 when all pieces are implemented.
 	
-	public void gameOver() {
+	public void gameOver(PieceColor winningTeam) {
+		this.winningTeam = winningTeam;
 		gameOver = true;
-		ChessPanel chessPanel = ChessPanel.getChessPanel();
 		repaint();	
 	}
 	
@@ -60,52 +70,82 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	
 	public void draw(Graphics2D g2) {
+		if (darkeningEffect == null) {
+			try {
+				darkeningEffect = ImageIO.read(getClass().getResourceAsStream("/other/Darkening_Effect.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (pathableTile == null) {
+			try {
+				pathableTile = ImageIO.read(getClass().getResourceAsStream("/other/Pathable_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (targetableTile == null) {
+			try {
+				targetableTile = ImageIO.read(getClass().getResourceAsStream("/other/Targetable_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (tileOutline == null) {
+			try {
+				tileOutline = ImageIO.read(getClass().getResourceAsStream("/other/Tile_Outline.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (selectedTile == null) {
+			try {
+				selectedTile = ImageIO.read(getClass().getResourceAsStream("/other/Selected_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (checkTile == null) {
+			try {
+				checkTile = ImageIO.read(getClass().getResourceAsStream("/other/Check_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		for (Tile[] tilesArray: tiles) {
 			for (Tile tile : tilesArray) {
 				if (tile.isPathable()) {
-					if (pathableTile == null) {
-						try {
-							pathableTile = ImageIO.read(getClass().getResourceAsStream("/other/Pathable_Tile.png"));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
+					
 					
 					g2.drawImage(pathableTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
 				}
-				if (tile.isTargetable()) {
-					if (targetableTile == null) {
-						try {
-							targetableTile = ImageIO.read(getClass().getResourceAsStream("/other/Targetable_Tile.png"));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
+				else if (tile.isTargetable()) {
+					
 					
 					g2.drawImage(targetableTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
 				}
+				else if (tile.getPiece() != null && tile.getPiece() == selectedPiece) {
+					g2.drawImage(selectedTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
+				}
+				else if (tile.isInCheck()) {
+					g2.drawImage(checkTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
+				}
+				else if (tile.isCheckable()) {
+					g2.drawImage(selectedTile, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
+				}
+			
+				g2.drawImage(tileOutline, tile.getLeftX(), tile.getTopY(), UNIT_SIZE, UNIT_SIZE, null);
 			}
 			
 		}
 		for (Piece piece : pieces) {
-			g2.setFont(new Font("TimesRoman", Font.PLAIN, 30)); 
-			g2.setColor(new Color(255,0,0));
-			
-			
-			if (currentTurnColor == PieceColor.WHITE) {
-				g2.drawString("WHITE", 200, 200);
-			} else if (currentTurnColor == PieceColor.BLACK) {
-				g2.drawString("BLACK", 200, 200);
-			}
-			if (piece.getAlive()) {
+			if (piece.isAlive()) {
 				g2.drawImage(piece.getImage(), piece.getX(), piece.getY(), UNIT_SIZE, UNIT_SIZE, null);
 			}
 		}
 	}
-
-
-
-	//If draw breaks, move g.dispose().
 	public void paintComponent(Graphics g) {
 		if (!initialized) {
 			reinitializePieces();
@@ -115,20 +155,19 @@ public class ChessPanel extends JPanel implements ActionListener {
 		g2 = (Graphics2D)g;
 		draw(g2);
 		if (gameOver) {
-			if (darkeningEffect == null) {
-				try {
-					darkeningEffect = ImageIO.read(getClass().getResourceAsStream("/other/Darkening_Effect.png"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 			g2.drawImage(darkeningEffect, 0, 0, UNIT_SIZE * COL, UNIT_SIZE * ROW, null);
 			g2.setFont(new Font("TimesRoman", Font.PLAIN, 100)); 
 			g2.setColor(new Color(255,0,0));
-			g2.drawString("Game Over", 200, 200);
+			if (winningTeam	== PieceColor.BLACK) {
+				g2.drawString("Black wins", 200, 200);
+			}
+			else if( winningTeam == PieceColor.WHITE) {
+				g2.drawString("White wins", 200, 200);
+			}
 			
 		}
-
+		g2.dispose();
+		g.dispose();
 	}
 	
 	
@@ -214,6 +253,9 @@ public class ChessPanel extends JPanel implements ActionListener {
 			initialPlacement(pieces[30]);
 			pieces[31] = new Rook(PieceColor.WHITE, UNIT_SIZE * 7, UNIT_SIZE * 7);
 			initialPlacement(pieces[31]);
+			
+			whiteKing = pieces[27];
+			blackKing = pieces[11];
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -225,7 +267,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 	public void drawBoard(Graphics g) {
 		//System.out.println("draw board");
 		boolean colorChange = false;
-		for (int i = 0; i < COL; i++) {
+		for (int i = 0; i < COL; ++i) {
 			colorChange = !colorChange;
 			for (int j = 0; j < ROW; j++) {
 				if (colorChange == false) {
@@ -253,6 +295,30 @@ public class ChessPanel extends JPanel implements ActionListener {
 			//System.out.println("Didmove: " + didMove);
 			
 			if (didMove) {
+				for (Tile[] tileArray : tiles) {
+					for (Tile tile : tileArray) {
+						tile.setNotInCheck();
+					}
+				}
+				for (Piece piece : pieces) {
+					if (piece.isAlive()) {
+						piece.showPathing();
+						
+					}
+				}
+				if (whiteKing.checkMate(pieces)) {
+						System.out.println("Black wins");
+					gameOver(PieceColor.BLACK);
+				}
+				else if (blackKing.checkMate(pieces)) {
+					gameOver(PieceColor.WHITE);
+				}
+				for (Piece piece : pieces) {
+					if (piece.isAlive()) {
+						
+						piece.hidePathing();
+					}
+				}
 				if (currentTurnColor == PieceColor.WHITE) {
 					currentTurnColor = PieceColor.BLACK;
 				} else {
