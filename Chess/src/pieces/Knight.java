@@ -17,8 +17,8 @@ public class Knight extends Piece {
 	
 	@Override
 	public void showPathing() {
-		for (int i = 0; i < tiles.length; i++)	{
-			for (int j = 0; j < tiles[i].length; j++) {
+		for (int i = 0; i < tiles.length; ++i)	{
+			for (int j = 0; j < tiles[i].length; ++j) {
 				if ((y - tiles[i][j].getTopY() == -200 && x - tiles[i][j].getLeftX() == 100) //down 2 left 1
 						|| (y - tiles[i][j].getTopY() == -200 && x - tiles[i][j].getLeftX() == -100) //down 2 right 1
 						|| (y - tiles[i][j].getTopY() == 200 && x - tiles[i][j].getLeftX() == 100) //up 2 left 1
@@ -30,10 +30,17 @@ public class Knight extends Piece {
 						
 					if (tiles[i][j].isOccupied()) {
 						if (tiles[i][j].getPiece().getColor() != color) {
+							if (tiles[i][j].isResidentKing()) {
+								tiles[i][j].setInCheck();
+							} else {
 							tiles[i][j].setTargetable();
 							targetingStorage.push(new int[]{i, j});
+							}
 						}
 					} else {
+						if (tiles[i][j].isCheckable()) {
+							tiles[i][j].setChecked();
+						}
 						tiles[i][j].setPathable();
 						pathingStorage.push(new int[]{i, j});
 					}
