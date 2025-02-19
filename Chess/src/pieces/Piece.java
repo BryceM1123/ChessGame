@@ -2,6 +2,7 @@ package pieces;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
@@ -15,24 +16,24 @@ public class Piece {
 	protected int y;
 	protected int x;
 	protected Tile currentTile;
-	public BufferedImage image;
-	public boolean alive = true;
-	Stack<int[]> pathingStorage = new Stack<int[]>();
-	Stack<int[]> targetingStorage = new Stack<int[]>();
-	Tile[][] tiles = TileManager.getTiles();
-	String whiteImage;
-	String blackImage;
-	String amongUsImage;
-	ChessPanel chessPanel = ChessPanel.getChessPanel();
+	private BufferedImage image;
+	private boolean alive = true;
+	protected Stack<int[]> pathingStorage = new Stack<int[]>();
+	protected Stack<int[]> targetingStorage = new Stack<int[]>();
+	protected final Tile[][] tiles = TileManager.getTiles();
+	private final String whiteImage;
+	private final String blackImage;
+	private final String amongUsImage;
+	protected final ChessPanel chessPanel = Objects.requireNonNull(ChessPanel.getChessPanel());
 	
 	//add images to this parent constructor
 	Piece(PieceColor color, int x, int y, String whiteImage, String blackImage, String amongUsImage) throws IOException {
-		this.color = color;
-		this.x = x;
-		this.y = y;
-		this.whiteImage = whiteImage;
-		this.blackImage = blackImage;
-		this.amongUsImage = amongUsImage;
+		this.color = Objects.requireNonNull(color);
+		this.x = Objects.requireNonNull(x);
+		this.y = Objects.requireNonNull(y);
+		this.whiteImage = Objects.requireNonNull(whiteImage);
+		this.blackImage = Objects.requireNonNull(blackImage);
+		this.amongUsImage = Objects.requireNonNull(amongUsImage);
 		
 		if (color == PieceColor.WHITE) {
 			this.image = ImageIO.read(getClass().getResourceAsStream(whiteImage));
@@ -41,6 +42,8 @@ public class Piece {
 		}
 	}
 	
+	//required for every piece
+	//implementation is unique for each subclass
 	public void showPathing() {
 		
 	}
@@ -105,7 +108,36 @@ public class Piece {
 	}
 	
 	public boolean move(int targetX, int targetY) {
+		Tile oldTile = currentTile;
+		Tile targetTile = TileManager.findTile(targetX, targetY);
+	
+		if (targetTile.isPathable()) {
+			//take an unoccupied tile
+			targetTile.occupyTile(this);
+			currentTile = targetTile;
+			this.x = targetTile.getLeftX();
+			this.y = targetTile.getTopY();
+			oldTile.unoccupyTile();	
+			chessPanel.callDraw();
+			return true;
+		}
+		else if (targetTile.isTargetable() ) {
+			attack(targetTile);
+			return true;
+		}	 
 		return false;
+	}
+	
+	public void attack(Tile targetTile) {
+		Piece targetPiece = targetTile.getPiece();
+		Tile oldTile = currentTile;
+		targetTile.occupyTileByForce(this);
+		currentTile = targetTile;
+		oldTile.unoccupyTile();
+		targetPiece.kill();
+		this.x = targetTile.getLeftX();
+		this.y = targetTile.getTopY();
+		chessPanel.callDraw();
 	}
 	
 	public boolean isAlive() {
@@ -124,8 +156,9 @@ public class Piece {
 		if (this instanceof King) {
 			if (this.color == PieceColor.BLACK) {
 				chessPanel.gameOver(PieceColor.WHITE);
+			} else {
+			chessPanel.gameOver(PieceColor.BLACK);
 			}
-			chessPanel.gameOver(color);
 			chessPanel.callDraw();
 		}
 	}

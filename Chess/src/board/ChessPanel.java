@@ -14,17 +14,17 @@ import tiles.TileManager;
 
 import java.util.Random;
 
-public class ChessPanel extends JPanel implements ActionListener {
+public final class ChessPanel extends JPanel implements ActionListener {
 	public static final ChessPanel chessPanel = new ChessPanel(); //ensures that the ChessPanel class is a singleton
 	
-	//define the resolution for chess. You shouldn't need to resize this.
-	static final int UNIT_SIZE = 100; //100 is default. if changed, you will need to edit ChessFrame
-	static final int ROW = 8;
-	static final int COL = 8;
-	static final int SCREEN_WIDTH = ROW * UNIT_SIZE;
-	static final int SCREEN_HEIGHT = COL * UNIT_SIZE;
-	PieceColor currentTurnColor = PieceColor.WHITE;
-	Graphics2D g2;
+	//define the resolution for chess
+	private static final int UNIT_SIZE = 100; //100 is default. if changed, it ideally should change the size of the screen. this doesn't work right now
+	private static final int ROW = 8;
+	private static final int COL = 8;
+	private static final int SCREEN_WIDTH = ROW * UNIT_SIZE;
+	private static final int SCREEN_HEIGHT = COL * UNIT_SIZE;
+	private PieceColor currentTurnColor = PieceColor.WHITE;
+	private Graphics2D g2;
 	private boolean gameOver = false;
 	private boolean initialized; // checks whether pieces have been initialized.
 	
@@ -32,12 +32,12 @@ public class ChessPanel extends JPanel implements ActionListener {
 	private Piece whiteKing;
 	private Piece blackKing;
 	
-	BufferedImage darkeningEffect;
-	BufferedImage pathableTile;
-	BufferedImage targetableTile;
-	BufferedImage tileOutline;
-	BufferedImage selectedTile;
-	BufferedImage checkTile;
+	private BufferedImage darkeningEffect;
+	private BufferedImage pathableTile;
+	private BufferedImage targetableTile;
+	private BufferedImage tileOutline;
+	private BufferedImage selectedTile;
+	private BufferedImage checkTile;
 	
 	PieceColor winningTeam = null;
 	
@@ -70,49 +70,7 @@ public class ChessPanel extends JPanel implements ActionListener {
 	
 	
 	public void draw(Graphics2D g2) {
-		if (darkeningEffect == null) {
-			try {
-				darkeningEffect = ImageIO.read(getClass().getResourceAsStream("/other/Darkening_Effect.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (pathableTile == null) {
-			try {
-				pathableTile = ImageIO.read(getClass().getResourceAsStream("/other/Pathable_Tile.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (targetableTile == null) {
-			try {
-				targetableTile = ImageIO.read(getClass().getResourceAsStream("/other/Targetable_Tile.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (tileOutline == null) {
-			try {
-				tileOutline = ImageIO.read(getClass().getResourceAsStream("/other/Tile_Outline.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (selectedTile == null) {
-			try {
-				selectedTile = ImageIO.read(getClass().getResourceAsStream("/other/Selected_Tile.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		
-		if (checkTile == null) {
-			try {
-				checkTile = ImageIO.read(getClass().getResourceAsStream("/other/Check_Tile.png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		
 		for (Tile[] tilesArray: tiles) {
 			for (Tile tile : tilesArray) {
@@ -179,11 +137,55 @@ public class ChessPanel extends JPanel implements ActionListener {
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
 		this.addMouseListener(new MyMouseAdapter());
+		
 	}
 	
 	//manually places all of the pieces
 	//I can't remember why its in a try catch block, investigate later
 	private void reinitializePieces() {
+		if (darkeningEffect == null) {
+			try {
+				darkeningEffect = ImageIO.read(getClass().getResourceAsStream("/other/Darkening_Effect.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (pathableTile == null) {
+			try {
+				pathableTile = ImageIO.read(getClass().getResourceAsStream("/other/Pathable_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (targetableTile == null) {
+			try {
+				targetableTile = ImageIO.read(getClass().getResourceAsStream("/other/Targetable_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (tileOutline == null) {
+			try {
+				tileOutline = ImageIO.read(getClass().getResourceAsStream("/other/Tile_Outline.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (selectedTile == null) {
+			try {
+				selectedTile = ImageIO.read(getClass().getResourceAsStream("/other/Selected_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (checkTile == null) {
+			try {
+				checkTile = ImageIO.read(getClass().getResourceAsStream("/other/Check_Tile.png"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		try {
 			pieces[0] = new Pawn(PieceColor.BLACK, UNIT_SIZE * 0, UNIT_SIZE * 1);
 			initialPlacement(pieces[0]);

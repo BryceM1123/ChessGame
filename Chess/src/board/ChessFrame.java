@@ -2,7 +2,7 @@ package board;
 
 import javax.swing.JFrame;
 
-public class ChessFrame extends JFrame {
+public final class ChessFrame extends JFrame {
 	public static final ChessFrame chessFrame = new ChessFrame();
 	
 	//Creates the frame for the game to be placed inside.
