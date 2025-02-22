@@ -2,23 +2,9 @@ This is a simple chess game coded from scratch.
 
 Missing core features:
   
-    display which color won
-  
-  visibly selected piece
-  
-  better ui
-  
-    turn count
-    
-    which color is moving
-  
-  check system
-  
   pawn upgrade when it reaches the end
 
-Potential features:
-  
-  moving/killing animations
-
-  new pieces
+Bugs:
+  Checkmate applies even when the "checking" piece could be killed
+  The king can not defend himself from check
 
